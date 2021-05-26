@@ -1,6 +1,6 @@
 package com.svi.training.handson1;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class Game {
@@ -10,36 +10,48 @@ public class Game {
 	private WastePile wastePile;
 	private Talon talon;
 
-	public Game(Deck deck) {
-		this.tableau = new Tableau(new Deck(deck.getCards()));
-		this.talon = new Talon(new Deck(deck.getCards()));
+	public Game() {
+		this.tableau = new Tableau();
+		this.talon = new Talon();
 		this.wastePile = new WastePile();
 		this.foundation = new Foundation();
 
+	}
+
+	public void startGame(Deck deck) {
 		createTableau(deck);
 		createTalon(deck);
+		// System.out.println(!tableau.getTableauRow(0).get(0).toString().equals("Covered"));
+		// //always my condition
+
 	}
 
 	public void createTableau(Deck deck) {
-		ArrayList<ArrayList<Card>> tab = tableau.getTableau();
-
+		List<List<Card>> tab = tableau.getRowColumn();
 		for (int i = 0; i <= tableau.getSize() - 1; i++) {
-			for (int j = 0; j <= tableau.getSize() - 1; j++) {
+			for (int j = tableau.getSize() - 1; j >= 0; j--) {
 				if (j < (tableau.getSize() - i)) {
 					tab.get(j).add(deck.getCards().pop()); // ????????????
 				}
 			}
 		}
+		/*
+		 * for (List<Card> row : tableau.getRowColumn()) { if (!row.isEmpty()) { Card
+		 * last = row.get(row.size() - 1); // get last element of each row if
+		 * (!last.isFaceUp()) { // check if ace down, if falsef last.flipToOpen(); //
+		 * becomes face up } } }
+		 */
+
 	}
 
 	public void createTalon(Deck deck) {
-
 		Stack<Card> tal = talon.getTalonCards();
 		while (deck.getCards().size() != 0) {
 			tal.add(deck.getCards().pop()); // noice
-
 		}
-
+		// for (Card c : tal) {
+		// c.flipToOpen();
+		// }
 	}
 
 	public void displayTalon() { // display talon size, talon talon values, wastepile?
@@ -52,110 +64,154 @@ public class Game {
 	}
 
 	public void talonClicked() {
+		System.out.println("TALON CLICKED --------");
 		Stack<Card> talonPile = talon.getTalonCards();
 		Stack<Card> wasteP = wastePile.getWastePile();
 		int counter = 0;
-		while (talonPile.iterator().hasNext() && counter < 3) {
+		if (talonPile.iterator().hasNext() && counter < 1) {
 			wasteP.add(talonPile.pop());
 			counter++;
-			if (talonPile.isEmpty()) {
-				talonPile.addAll(wasteP);
-				wasteP.clear();
-			}
-			// if empty , add wastepile to talon, clear wastepile
-		}
-	}
-	//
 
-	public void tableauToFoundation() {
-		ArrayList<ArrayList<Card>> tab = tableau.getTableau();
-		Stack<Card> clubFoundation = foundation.getClubFoundation();
-		Stack<Card> spadeFoundation = foundation.getSpadeFoundation();
-		Stack<Card> heartFoundation = foundation.getHeartFoundation();
-		Stack<Card> diamondFoundation = foundation.getDiamondFoundation();
-
-		for (int i = tab.size() - 1; i >= 0; i--) { // ouch unreadable
-			if (!tab.get(i).isEmpty()) {
-				Card maxClub = foundation.peekTopClubsFoundation();
-				if (maxClub == null) {
-					// ace
-				} else {
-					foundation.peekTopClubsFoundation().getRankValue();
-				}
-
-				if (tab.get(i).get(tab.get(i).size() - 1)
-						.getRankValue() == foundation.peekTopClubsFoundation().getRankValue() + 1 // if not null,
-						&& (tab.get(i).get(tab.get(i).size() - 1).getSuit().equals(Suits.C))) {
-					tab.get(i).remove(tab.get(i).size() - 1);
-					clubFoundation.add(tab.get(i).get(tab.get(i).size() - 1));// clubs
-
-				} else if (tab.get(i).get(tab.get(i).size() - 1).getRankValue() == spadeFoundation.peek().getRankValue()
-						+ 1 && (tab.get(i).get(tab.get(i).size() - 1).getSuit().equals(Suits.S))) {
-					tab.get(i).remove(tab.get(i).size() - 1);
-					spadeFoundation.add(tab.get(i).get(tab.get(i).size() - 1));// spades
-
-				} else if (tab.get(i).get(tab.get(i).size() - 1).getRankValue() == heartFoundation.peek().getRankValue()
-						+ 1 && (tab.get(i).get(tab.get(i).size() - 1).getSuit().equals(Suits.H))) {
-					tab.get(i).remove(tab.get(i).size() - 1);
-					heartFoundation.add(tab.get(i).get(tab.get(i).size() - 1));// hearts
-
-				} else if (tab.get(i).get(tab.get(i).size() - 1).getRankValue() == clubFoundation.peek().getRankValue()
-						+ 1 && (tab.get(i).get(tab.get(i).size() - 1).getSuit().equals(Suits.D))) {
-					tab.get(i).remove(tab.get(i).size() - 1);
-					diamondFoundation.add(tab.get(i).get(tab.get(i).size() - 1));// diamonds
-				}
-			}
+		} else if (talonPile.isEmpty()) {
+			talonPile.addAll(wasteP);
+			wasteP.clear();
 		}
 
 	}
 
-	public void wastePileToFoundation() {
-		Stack<Card> wasteP = wastePile.getWastePile(); // if wastepile is ace and foundation is null
-		Stack<Card> clubFoundation = foundation.getClubFoundation();
-		Stack<Card> spadeFoundation = foundation.getSpadeFoundation();
-		Stack<Card> heartFoundation = foundation.getHeartFoundation();
-		Stack<Card> diamondFoundation = foundation.getDiamondFoundation();
-
-		Card maxClub = foundation.peekTopClubsFoundation();
-		Card maxSpade = foundation.peekTopSpadesFoundation();
-		Card maxHeart = foundation.peekTopHeartsFoundation();
-		Card maxDiamond = foundation.peekTopDiamondsFoundation();
-
-		if (maxClub == null && wasteP.pop().getRankValue() == 1) { // foundation is null and wastepile last element is
-			if (wasteP.pop().getSuit().equals(Suits.C)) { // no comparison for suits..
-				clubFoundation.add(wasteP.pop());
-			}
-		}else
-		//ate marsh sorry ganito lang naiisip ko :c
-		// spades
-		if (maxSpade == null && wasteP.pop().getRankValue() == 1) {
-			if (wasteP.pop().getSuit().equals(Suits.S)) {
-				spadeFoundation.add(wasteP.pop());
-			}
-		}else if(maxClub != null && maxClub.getRankValue() == wasteP.pop().getRankValue() + 1) {
-			if(wasteP.pop().getSuit().equals(Suits.S)) {
-				spadeFoundation.add(wasteP.pop());
-			}
-		}
-		// hearts
-		if(maxHeart == null && wasteP.pop().getRankValue() == 1)
-			if (wasteP.pop().getSuit().equals(Suits.H)) {
-				heartFoundation.add(wasteP.pop());
-				if (maxDiamond == null && wasteP.pop().getRankValue() == 1) {
-					if (wasteP.pop().getSuit().equals(Suits.D)) {
-						diamondFoundation.add(wasteP.pop());
-					}
+	public boolean autoWtoT() {
+		Stack<Card> talonC = talon.getTalonCards();
+		Stack<Card> wasteP = wastePile.getWastePile();
+		int row = 6;
+		while (row >= 0 && !wasteP.isEmpty()) {
+			if (wastePile.showCard().getRankValue() == 13 && tableau.getTableauRow(row).isEmpty()) {
+				System.out.println("CARD TO MOVE FROM WASTEPILE ---->" + wastePile.showCard());
+				moveWtoT(row);
+				return true;
+			} else if (!wastePile.getWastePile().isEmpty() && !tableau.getTableauRow(row).isEmpty()) {
+				Card wastePileTop = wastePile.showCard();
+				Card tableauLastCard = tableau.showLastCard(row);
+				if (MoverUtils.isMoveValid(tableauLastCard, wastePileTop)) {
+					System.out.println("CARD TO MOVE FROM WASTEPILE ---->" + wastePileTop);
+					moveWtoT(row);
+					return true;
 				}
+			}
+			row--;
+		}
+
+		System.out.println("NO POSSIBLE W2T MOVES");
+		return false;
 
 	}
+
+	public boolean autoTtoF() {
+		int row = 6;
+		while (row >= 0) {
+			
+			if(tableau.getTableauRow(row).isEmpty()) {
+				row--;
+			}
+			Card c = tableau.showLastCard(row);
+			if (MoverUtils.isMoveValid(c, foundation)) {
+				System.out.println("CARD TO MOVE FROM TABLEAU --->" + c);
+				moveTtoF(row);
+				return true;
+			}
+			row--;
+		}
+		System.out.println("NO POSSIBLE T2F MOVES");
+		return false;
+		// sloop tableau rows
+		// check only last elemnt per row, isMoveValid?
+	}
+
+	public boolean autoWtoF() {
+		if (!wastePile.getWastePile().isEmpty()) { // works for value 1
+			Card c = wastePile.showCard();
+			if (c != null && MoverUtils.isMoveValid(c, foundation)) {
+				System.out.println("CARD TO MOVE FROM WASTEPILE IS ---->" + c);
+				moveWtoF();
+				return true;
+			}
+		}
+		System.out.println("NO VALID W2F MOVES");
+
+		return false;
+	}
+
+	/**
+	 * This method does a move on cards within a tableau
+	 *
+	 */
+	public boolean autoTtoT() {
+		int tabRows = 6;
+
+		while (tabRows >= 0) {// if max is king and column 0 //if S-Q is maxvalue and column 0 is King row --
+			Card c = tableau.getMaxSolitaireCardInTheRow(tabRows);
+			
+			if (c != null && MoverUtils.isMoveValid(tableau, c)) {
+				System.out.println("CARD TO MOVE IS ----> " + c);
+				Location fromLocation = tableau.findCardInTableau(c);
+				int row = tableau.getRowToAppend(c);
+				moveTtoT(fromLocation.getRow(), fromLocation.getColumn(), row);
+				return true;
+			}
+		
+			tabRows--;
+		}
+		System.out.println("NO VALID T2T MOVES");
+		return false;
+
+	}
+
+	// implementation to add last element of specified row to specified foundation
+	public void moveTtoF(int fromTableauRow) {
+		Card c = tableau.showLastCard(fromTableauRow);
+		tableau.removeLastCard(fromTableauRow);
+		foundation.addFoundation(c);
+	}
+
+	public void moveWtoF() {
+		Card c = wastePile.showCard();
+		wastePile.removeCard();
+		foundation.addFoundation(c);
+	}
+
+	public void moveWtoT(int toTableauRow) {
+		Card c = wastePile.showCard();
+		wastePile.removeCard();
+		tableau.addCard(c, toTableauRow);
+	}
+
+	public void moveTtoT(int fromTableauRow, int fromTableauColumn, int toTableauRow) {
+		tableau.transferBetweenPiles(fromTableauRow, fromTableauColumn, toTableauRow);
+	}
+
 	// from wastepile to foundation, remove wastepile
 
 	// method loop tableau, add to foundation last element,if not empty
 	// given a tab, add last element to foundation
-	public boolean hasNotEnded() {
-		// move class, isMoveValid()
+	public boolean hasEnded() {
+
+		boolean f = foundation.winningCondition();
+
+		if (f == true) {
+			return true;
+		}
 
 		return false;
+	}
+
+	public void faceUpLastCard() {
+		for (List<Card> row : tableau.getRowColumn()) {
+			if (!row.isEmpty()) {
+				Card last = row.get(row.size() - 1); // get last element of each row
+				if (!last.isFaceUp()) { // check if ace down, if falsef
+					last.flipToOpen(); // becomes face up
+				}
+			}
+		}
 	}
 
 	@Override

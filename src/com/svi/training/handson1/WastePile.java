@@ -1,6 +1,7 @@
 package com.svi.training.handson1;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 
 public class WastePile {
@@ -14,21 +15,13 @@ public class WastePile {
 		wastePile = new Stack<>();
 	}
 
-	public Card removeTopWastePile() {
-		return wastePile.pop();
-	}
-
-	public Card getTopOfWastePile() {
+	
+	public Card showCard(){
 		return wastePile.peek();
 	}
 
-	public void draw(Stack<Card> card) {
-		Iterator<Card> value = card.iterator();
-		while (value.hasNext()) {
-				wastePile.add(value.next());
-		}
-		 // clear current values, add three
-
+	public void removeCard(){
+		wastePile.pop();
 	}
 
 	@Override

@@ -5,6 +5,8 @@ public class Card {
 	private Suits suit;
 	private Ranks rank;
 	private String color;
+
+
 	private boolean faceUp;
 
 	public Card(String suit, String rank) {
@@ -54,15 +56,17 @@ public class Card {
 		
 	}
 
-	
+
+
 	@Override
 	public String toString() {
-		//if(isFaceUp()) {
-			return suit + "-" + rank.getRankString();
-		//}else {
-		//	return "Covered";
-		//}
+		/*
+		 * if(isFaceUp()) { return suit + "-" + rank.getRankString(); }else { return
+		 * "Covered"; }
+		 */
+		return suit + "-" + rank.getRankString();
 	}
+	
 
 
 

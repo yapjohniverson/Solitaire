@@ -2,51 +2,56 @@ package com.svi.training.handson1;
 
 public class MoverUtils {
 
-	public boolean isMoveValid(Tableau t, Card c) {
+	public static boolean isMoveValid(Tableau t, Card c) { // c is highest t is the row to append
 		boolean wasteAddToTableau = false;
+		Location fromLocation = t.findCardInTableau(c);
+
 		for (int i = t.getSize() - 1; i >= 0; i--) {
-			if ((t.getTableauRow(i).isEmpty() && c.getRank().equals(c.getRank().KING)) || (!t.getTableauRow(i).isEmpty() && 
-					(t.getTableauRow(i).get(t.getTableauRow(i).size() - 1).getRankValue() == c.getRankValue() + 1
-					&& t.getTableauRow(i).get(t.getTableauRow(i).size() - 1).getSuitColor() != c.getSuitColor()))) {
-				wasteAddToTableau = true;
-				//return the row
-				//if(t.getTableauRow(i).get(t.getTableauRow(i).size()-1).iterator().hasPrevious() == ); how to reverse
+			/*if (!t.getTableauRow(i).isEmpty() && (t.getTableauRow(i).get(0).getRankValue() == 13
+					&& (c.getRankValue() == 12 && fromLocation.getColumn() == 1))) {
+				wasteAddToTableau = false;
+			}*/
+			if(c.getRankValue() == 13 && fromLocation.getColumn() == 0) {
+				wasteAddToTableau = false;
 			}
-		}
-		
+			// if highest is king and there is an empty row
+			else if (t.getTableauRow(i).isEmpty() && c.getRankValue() == 13 || (!t.getTableauRow(i).isEmpty()
+					&& (t.getTableauRow(i).get(t.getTableauRow(i).size() - 1).getRankValue() == c.getRankValue() + 1)
+					&& (t.getTableauRow(i).get(t.getTableauRow(i).size() - 1).getSuitColor() != c.getSuitColor()))) {
+				wasteAddToTableau = true;
+			}
 
+		}
 		return wasteAddToTableau;
-
-		// if empty and card value is king, if not empty and last index of row is
-		// sequence of card
 	}
 
-	public boolean isMoveValid(Card c, Foundation f) { // tableau to foundation
+	public static boolean isMoveValid(Card c, Foundation f) { // tableau to foundation
 		boolean addToFoundation = false;
-		if (c.getRank().equals(1) && c.getSuit().equals(c.getSuit().C)
-				|| (!f.isEmpty() && (f.peekTopClubsFoundation().getRankValue() == c.getRankValue() - 1
-						&& c.getSuit().equals(c.getSuit().C)))) {
+		if ((c.getRankValue() == 1) || (!f.getClubFoundation().isEmpty()
+				&& ((c.getRankValue() == f.getClubFoundation().peek().getRankValue() + 1)
+						&& c.getSuit().equals(Suits.C)))) {
 			addToFoundation = true;
-		} else if (c.getRank().equals(1) && c.getSuit().equals(c.getSuit().S)
-				|| (!f.isEmpty() && (f.peekTopSpadesFoundation().getRankValue() == c.getRankValue() - 1
-						&& c.getSuit().equals(c.getSuit().S)))) {
+		} else if (c.getRankValue() == 1 || (!f.getSpadeFoundation().isEmpty()
+				&& ((c.getRankValue() == f.getSpadeFoundation().peek().getRankValue() + 1)
+						&& c.getSuit().equals(Suits.S)))) {
 			addToFoundation = true;
-		} else if (c.getRank().equals(1) && c.getSuit().equals(c.getSuit().H)
-				|| (!f.isEmpty() && (f.peekTopHeartsFoundation().getRankValue() == c.getRankValue() - 1
-						&& c.getSuit().equals(c.getSuit().H)))) {
+		} else if (c.getRankValue() == 1 || (!f.getHeartFoundation().isEmpty()
+				&& ((c.getRankValue() == f.getHeartFoundation().peek().getRankValue() + 1)
+						&& c.getSuit().equals(Suits.H)))) {
 			addToFoundation = true;
-		} else if (c.getRank().equals(1) && c.getSuit().equals(c.getSuit().D)
-				|| (!f.isEmpty() && (f.peekTopDiamondsFoundation().getRankValue() == c.getRankValue() - 1
-						&& c.getSuit().equals(c.getSuit().D)))) {
+		} else if (c.getRankValue() == 1 || (!f.getDiamondFoundation().isEmpty()
+				&& ((c.getRankValue() == f.getDiamondFoundation().peek().getRankValue() + 1)
+						&& c.getSuit().equals(Suits.D)))) {
 			addToFoundation = true;
 		}
-
 		return addToFoundation;
+
 	}
 
-	public boolean isMoveValid(Card original, Card append) {
+	public static boolean isMoveValid(Card original, Card append) {
 		boolean cardToCard = false;
-		if (append.getRankValue() == original.getRankValue() + 1 && append.getSuitColor() != original.getSuitColor()) {
+		if ((append.getRankValue() + 1) == original.getRankValue()
+				&& append.getSuitColor() != original.getSuitColor()) {
 			cardToCard = true;
 		}
 		return cardToCard;

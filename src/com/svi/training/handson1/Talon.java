@@ -15,7 +15,7 @@ public class Talon {
 	// question
 	// (d) ano ung method name dapat un lang ung ginagawa, walang magic
 
-	public Talon(Deck deck) {
+	public Talon() {
 		this.talonCards = new Stack<>();
 	}
 

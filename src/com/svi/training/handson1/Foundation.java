@@ -1,6 +1,7 @@
 package com.svi.training.handson1;
 
 import java.util.Stack;
+import static com.svi.training.handson1.Suits.*;
 
 public class Foundation {
 	private Stack<Card> clubs;
@@ -27,7 +28,25 @@ public class Foundation {
 
 	}
 
-	// foundation put
+	public void addFoundation(Card c){
+		Suits suit = c.getSuit();
+		switch(suit) {
+			case C:
+				clubs.push(c);
+				break;
+			case S:
+				spades.push(c);
+				break;
+			case H:
+				hearts.push(c);
+				break;
+			case D:
+				diamonds.push(c);
+				break;
+			default:
+				System.out.println("ERROR: Invalid Suit!");
+		}
+	}
 
 	public Card peekTopClubsFoundation() {
 		if (clubs.isEmpty()) {
@@ -69,14 +88,7 @@ public class Foundation {
 		return full;
 	}
 
-	public void showTopFoundations() {
-		String club = "";
-		String spade = "";
-		String heart = "";
-		String diamond = "";
-
-		// if not empty, show top card using peek
-	}
+	
 
 	public Stack<Card> getClubFoundation() {
 		// TODO Auto-generated method stub
