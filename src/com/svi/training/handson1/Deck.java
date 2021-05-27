@@ -10,13 +10,16 @@ public class Deck {
 	private int size;
 	private boolean isFaceUp;
 
+	public void setFaceUp(boolean isFaceUp) {
+		this.isFaceUp = isFaceUp;
+	}
+
 	public Stack<Card> getCards() {
 		return cards;
 	}
 
 	public Deck(Stack<Card> gameCard) {
 		this.cards = gameCard;
-		this.isFaceUp = false;
 	}
 	
 	public void shuffleCards() {
@@ -31,6 +34,7 @@ public class Deck {
 	public String toString() {
 		return "Deck: " + cards ;
 	}
+
 	
 	
 }

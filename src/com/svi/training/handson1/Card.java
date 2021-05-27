@@ -6,8 +6,13 @@ public class Card {
 	private Ranks rank;
 	private String color;
 
-
 	private boolean faceUp;
+
+	
+
+	public void setFaceUp(boolean faceUp) {
+		this.faceUp = faceUp;
+	}
 
 	public Card(String suit, String rank) {
 		this.suit = Suits.valueOf(suit);
@@ -18,7 +23,7 @@ public class Card {
 		}
 		this.faceUp = false;
 	}
-	
+
 	public Suits getSuit() {
 		return suit;
 	}
@@ -34,42 +39,38 @@ public class Card {
 	public int getSuitValue() {
 		return suit.getValueOfSuit();
 	}
-	
+
 	public String setColor(String color) {
 		return this.color = color;
 	}
 
 	public String getSuitColor() {
-		if(this.suit.equals(Suits.C) || this.suit.equals(Suits.S)) {
+		if (this.suit.equals(Suits.C) || this.suit.equals(Suits.S)) {
 			return setColor("Black");
-		}else {
+		} else {
 			return setColor("Red");
-		}	
+		}
 	}
 
 	public boolean isFaceUp() {
 		return faceUp;
 	}
-	
+
 	public void flipToOpen() {
 		this.faceUp = !this.faceUp;
-		
+
 	}
-
-
 
 	@Override
 	public String toString() {
-		/*
-		 * if(isFaceUp()) { return suit + "-" + rank.getRankString(); }else { return
-		 * "Covered"; }
-		 */
-		return suit + "-" + rank.getRankString();
+
+		if (isFaceUp()) {
+			return suit + "-" + rank.getRankString();
+		} else {
+			return "Covered";
+		}
+
 	}
-	
-
-
-
 
 	// TODO Auto-generated method stub
 

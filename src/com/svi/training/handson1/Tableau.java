@@ -85,18 +85,20 @@ public class Tableau {
 			return rowCards.get(0);	
 		} else {
 			int column = rowCards.size() - 1;
-
+			
 			Card currentCard = rowCards.get(column);
 			Card topCard = rowCards.get(column - 1);
-
-			while (MoverUtils.isMoveValid(topCard, currentCard) && column > 1) {
-				column--;
-				currentCard = rowCards.get(column);
-				topCard = rowCards.get(column - 1);
-				
-				if(column == 1 && MoverUtils.isMoveValid(topCard, currentCard)) {
-					return topCard;
-				}
+			if(topCard.isFaceUp() && currentCard.isFaceUp()) {
+				while (MoverUtils.isMoveValid(topCard, currentCard) && column > 1) {
+					column--;
+					currentCard = rowCards.get(column);
+					topCard = rowCards.get(column - 1);
+					//hq is max in 2nd king in iteration 20
+					if(column == 1 && MoverUtils.isMoveValid(topCard, currentCard) && topCard.isFaceUp()) {
+						return topCard;
+					}
+			}
+			
 			
 			}
 			return currentCard;

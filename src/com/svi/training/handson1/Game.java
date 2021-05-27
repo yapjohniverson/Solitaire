@@ -9,12 +9,14 @@ public class Game {
 	private Tableau tableau;
 	private WastePile wastePile;
 	private Talon talon;
+	private boolean faceUp;
 
 	public Game() {
 		this.tableau = new Tableau();
 		this.talon = new Talon();
 		this.wastePile = new WastePile();
 		this.foundation = new Foundation();
+		this.faceUp = true;
 
 	}
 
@@ -35,6 +37,8 @@ public class Game {
 
 			}
 		}
+		faceUpLastCard();
+
 		/*
 		 * for (List<Card> row : tableau.getRowColumn()) { if (!row.isEmpty()) { Card
 		 * last = row.get(row.size() - 1); // get last element of each row if
@@ -46,9 +50,13 @@ public class Game {
 
 	public void createTalon(Deck deck) {
 		Stack<Card> tal = talon.getTalonCards();
+		for (Card c : deck.getCards()) {
+			c.flipToOpen();
+		}
 		while (deck.getCards().size() != 0) {
 			tal.add(deck.getCards().pop()); // noice
 		}
+
 		// for (Card c : tal) {
 		// c.flipToOpen();
 		// }
@@ -68,7 +76,7 @@ public class Game {
 		Stack<Card> talonPile = talon.getTalonCards();
 		Stack<Card> wasteP = wastePile.getWastePile();
 		int counter = 0;
-		if (talonPile.iterator().hasNext() && counter < 3) { //change draw 1 or draw 3
+		if (talonPile.iterator().hasNext() && counter < 1) { // change draw 1 or draw 3
 			wasteP.add(talonPile.pop());
 			counter++;
 
@@ -108,19 +116,23 @@ public class Game {
 	public boolean autoTtoF() {
 		int row = 6;
 		while (row >= 0) {
-			if(!tableau.getTableauRow(row).isEmpty()){
+			if (!tableau.getTableauRow(row).isEmpty()) {
 				Card c = tableau.showLastCard(row);
 				System.out.println(c);
-				if (MoverUtils.isMoveValid(c, foundation)) { 
-					System.out.println("CARD TO MOVE FROM TABLEAU --->" + c);
-					moveTtoF(row);
-					return true;
+				if (c.isFaceUp()) {
+					if (MoverUtils.isMoveValid(c, foundation)) {
+						System.out.println("CARD TO MOVE FROM TABLEAU --->" + c);
+						moveTtoF(row);
+						faceUpLastCard();
+						return true;
+					}
 				}
 			}
 			row--;
 		}
 		System.out.println("NO POSSIBLE T2F MOVES");
 		return false;
+
 		// sloop tableau rows
 		// check only last elemnt per row, isMoveValid?
 	}
@@ -146,19 +158,21 @@ public class Game {
 	public boolean autoTtoT() {
 		int tabRows = 6;
 
-		while (tabRows >= 0) {// if max is king and column 0 //if S-Q is maxvalue and column 0 is King row --
+		while (tabRows >= 0) {
 			Card c = tableau.getMaxSolitaireCardInTheRow(tabRows);
-
+			System.out.println(c);
 			if (c != null && MoverUtils.isMoveValid(tableau, c)) {
 				System.out.println("CARD TO MOVE IS ----> " + c);
 				Location fromLocation = tableau.findCardInTableau(c);
 				int row = tableau.getRowToAppend(c);
 				moveTtoT(fromLocation.getRow(), fromLocation.getColumn(), row);
+				faceUpLastCard();
 				return true;
 			}
-
 			tabRows--;
 		}
+		
+
 		System.out.println("NO VALID T2T MOVES");
 		return false;
 
