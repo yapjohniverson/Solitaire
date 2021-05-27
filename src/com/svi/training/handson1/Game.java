@@ -28,11 +28,11 @@ public class Game {
 
 	public void createTableau(Deck deck) {
 		List<List<Card>> tab = tableau.getRowColumn();
-		for (int i = 0; i <= tableau.getSize() - 1; i++) {
-			for (int j = tableau.getSize() - 1; j >= 0; j--) {
-				if (j < (tableau.getSize() - i)) {
-					tab.get(j).add(deck.getCards().pop()); // ????????????
-				}
+
+		for (int i = tableau.getSize() - 1; i >= 0; i--) {
+			for (int j = 0; j < tableau.getSize() - i; j++) {
+				tab.get(i).add(deck.getCards().pop()); // ????????????
+
 			}
 		}
 		/*
@@ -68,7 +68,7 @@ public class Game {
 		Stack<Card> talonPile = talon.getTalonCards();
 		Stack<Card> wasteP = wastePile.getWastePile();
 		int counter = 0;
-		if (talonPile.iterator().hasNext() && counter < 1) {
+		if (talonPile.iterator().hasNext() && counter < 3) { //change draw 1 or draw 3
 			wasteP.add(talonPile.pop());
 			counter++;
 
@@ -108,15 +108,14 @@ public class Game {
 	public boolean autoTtoF() {
 		int row = 6;
 		while (row >= 0) {
-			
-			if(tableau.getTableauRow(row).isEmpty()) {
-				row--;
-			}
-			Card c = tableau.showLastCard(row);
-			if (MoverUtils.isMoveValid(c, foundation)) {
-				System.out.println("CARD TO MOVE FROM TABLEAU --->" + c);
-				moveTtoF(row);
-				return true;
+			if(!tableau.getTableauRow(row).isEmpty()){
+				Card c = tableau.showLastCard(row);
+				System.out.println(c);
+				if (MoverUtils.isMoveValid(c, foundation)) { 
+					System.out.println("CARD TO MOVE FROM TABLEAU --->" + c);
+					moveTtoF(row);
+					return true;
+				}
 			}
 			row--;
 		}
@@ -149,7 +148,7 @@ public class Game {
 
 		while (tabRows >= 0) {// if max is king and column 0 //if S-Q is maxvalue and column 0 is King row --
 			Card c = tableau.getMaxSolitaireCardInTheRow(tabRows);
-			
+
 			if (c != null && MoverUtils.isMoveValid(tableau, c)) {
 				System.out.println("CARD TO MOVE IS ----> " + c);
 				Location fromLocation = tableau.findCardInTableau(c);
@@ -157,7 +156,7 @@ public class Game {
 				moveTtoT(fromLocation.getRow(), fromLocation.getColumn(), row);
 				return true;
 			}
-		
+
 			tabRows--;
 		}
 		System.out.println("NO VALID T2T MOVES");

@@ -27,7 +27,7 @@ public class MoverUtils {
 
 	public static boolean isMoveValid(Card c, Foundation f) { // tableau to foundation
 		boolean addToFoundation = false;
-		if ((c.getRankValue() == 1) || (!f.getClubFoundation().isEmpty()
+		if (c.getRankValue() == 1 || (!f.getClubFoundation().isEmpty()
 				&& ((c.getRankValue() == f.getClubFoundation().peek().getRankValue() + 1)
 						&& c.getSuit().equals(Suits.C)))) {
 			addToFoundation = true;

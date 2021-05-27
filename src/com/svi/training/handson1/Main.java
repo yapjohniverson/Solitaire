@@ -8,52 +8,73 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Stack;
-
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 
-        ReadFile file = new ReadFile();
-		String fileFromText = "D-A,D-K,D-Q,D-J,D-10,D-9,D-8,D-7,D-6,D-5,D-4,D-3,D-2,H-A,H-K,H-Q,H-J,H-10,H-9,H-8,H-7,H-6,H-5,H-4,H-3,H-2,S-A,S-K,S-Q,S-J,S-10,S-9,S-8,S-7,S-6,S-5,S-4,S-3,S-2,C-A,C-K,C-Q,C-J,C-10,C-9,C-8,C-7,C-6,C-5,C-4,C-3,C-2";
+		ReadFile file = new ReadFile();
+		String fileFromText = file.readFile("input.txt");
 
+		// System.out.println(fileFromText);
+		
 		Card card;
 		Stack<Card> gameCard = new Stack<>();
 		Deck deck = new Deck(gameCard);
 
 		for (String data : fileFromText.split(",")) {
-            String suit = data.split("-")[0];
-            String rank = data.split("-")[1];
-            card = new Card(suit, rank);
-            gameCard.add(card);
-        }
-
+			String suit = data.split("-")[0];
+			String rank = data.split("-")[1];
+			card = new Card(suit, rank);
+			gameCard.add(card);
+		}
+		System.out.println(deck);
 		// TODO: Uncomment later after debug
-        //deck.shuffleCards();
+		 deck.shuffleCards();
 		
+		 
+		Scanner input = new Scanner(System.in);
+		System.out.println("How many times do you want to play?");
+		int numberOfGames = input.nextInt();
+		Game game = new Game();
+		game.startGame(deck);
+		System.out.println(game);
+		// add junit
 		
-        Game game = new Game();
-        game.startGame(deck);
-        
-        int counter = 0;
-        while(counter < 100) {
-        	game.autoTtoT();
-        	game.autoWtoT();
-        	game.autoWtoF();
-        	game.autoTtoF();
-        	game.talonClicked();
-        	System.out.println(game);
-        	counter++;
-        	}
-       
-    
-        
-        
-        
-     
-        
-   /*
+		int winCounter = 0;
+		int loseCounter = 0;
+		int counter = 0; 
+		for(int i = 0;  i < numberOfGames; i++) {
+			while (!game.hasEnded()) {
+				game.autoTtoT();
+				System.out.println(game);
+				game.autoWtoT();
+				System.out.println(game);
+				game.autoWtoF();
+				System.out.println(game);
+				game.autoTtoF();
+				System.out.println(game);
+				game.talonClicked();
+				System.out.println(game);
+				
+				counter++;
+				if(game.hasEnded()) {
+					System.out.println("Congratulations! You won!");
+					winCounter++;
+				}else if(counter == 150) {
+					System.out.println("no possible moves, you lose");
+					loseCounter++;
+					break;
+				}
+		}
+		
+		}
+		System.out.println("number of wins" + winCounter);
+		System.out.println("number of loss" + loseCounter);
+
+		/*
 		 * while(!game.hasNotEnded()) { game.autoTtoT(); System.out.println(game);
 		 * game.autoWtoT(); System.out.println(game); game.autoWtoF();
 		 * System.out.println(game); game.autoTtoF(); System.out.println(game);
@@ -83,7 +104,7 @@ public class Main {
 		 * System.out.println(game); game.autoWtoF(); System.out.println(game);
 		 * game.autoTtoF(); System.out.println(game);
 		 */
-		
+
 		/*
 		 * while (!game.hasNotEnded()) {
 		 * 
@@ -97,8 +118,6 @@ public class Main {
 		 * 
 		 * game.talonClicked();
 		 */
-        
-       
-        }
-    }
 
+	}
+}
